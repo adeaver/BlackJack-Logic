@@ -1,0 +1,13 @@
+[{
+    "name":"blackjack",
+    "deal":2,
+    "hit":1,
+    "hit_req":false,
+    "hit_until":"done"
+}, {
+    "name":"bs",
+    "deal":"divide",
+    "hit":0,
+    "hit_req":false,
+    "hit_until":"dealt"
+}]
