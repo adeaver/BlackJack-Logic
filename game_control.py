@@ -29,36 +29,20 @@ class Game():
         self.until = until
         self.players = players
 
-        self.dealt = 0
-        self.hitting = 0
-
         if(self.deal == "divide"):
             self.deal = 52/self.players
     
-    def deal_cards(self):
-        # THIS SHOULD SEND TO ARDUINO
-        self.dealt += 1
+    def get_deal_amount(self):
         return self.deal
 
-    def hit_player(self):
-        hit_again = True
+    def get_hit_amount(self):
+        return self.hit
 
-        while hit_again:
-            if(self.req):
-                # THIS SHOULD SEND TO ARDUINO
-                pass
-            else:
-                # WAIT FOR INPUT
-                pass
-            
-            if(self.until == "dealt"):
-                hit_again = False
-            else:
-                # WAIT FOR INPUT
-                hit_again = False # Should be true or false
-    
-        self.hitting = (self.hitting+1)%self.players
-        return
+    def is_hit_required(self):
+        return self.req
+
+    def can_continue_to_hit(self):
+        return self.until == "done"
                     
         
         

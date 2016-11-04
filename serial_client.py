@@ -22,9 +22,12 @@ class SerialClient():
     def connected(self):
         return self.ser is not None
 
-    def request_state(self):
-        self.write("4444")
-        return self.get_input()
+    def send_state(self, state):
+        if(self.ser is not None):
+            write(state)
+
+    def receive_state(self):
+        pass
 
     def send_current_state(self):
         self.write(self.LAST_STATE_SENT)
