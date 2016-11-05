@@ -24,10 +24,20 @@ class SerialClient():
 
     def send_state(self, state):
         if(self.ser is not None):
-            write(state)
+            self.write(state)
 
     def receive_state(self):
-        pass
+        inp = ""
+
+        while inp != "":
+            inp = get_input()
+
+            if(inp == "6666"):
+                # corresponds to resend state
+                self.send_current_state()
+                inp = ""
+
+        return inp
 
     def send_current_state(self):
         self.write(self.LAST_STATE_SENT)

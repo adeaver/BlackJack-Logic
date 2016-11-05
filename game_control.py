@@ -38,6 +38,9 @@ class Game():
     def get_hit_amount(self):
         return self.hit
 
+    def get_num_players(self):
+        return self.players
+
     def is_hit_required(self):
         return self.req
 
