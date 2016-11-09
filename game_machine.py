@@ -24,6 +24,7 @@ class GameMachine():
                 self.send_command()
 
             self.update_state()
+            print self.current_state
 
         print "Game over!"
 
@@ -34,9 +35,9 @@ class GameMachine():
         self.n -= 1 # decrement the amount of players left to deal to
 
     def send_command(self):
-        #self.serial_client.send_state(self.OUTPUT[self.current_state])
-        #self.current_output = self.serial_client.receive_state()
-        self.current_output = self.OUTPUT[self.current_state]
+        self.serial.send_state(self.OUTPUT[self.current_state])
+        self.current_output = self.serial.receive_state()
+        #self.current_output = self.OUTPUT[self.current_state]
 
     def update_state(self):
         if(self.current_state == 1):

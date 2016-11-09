@@ -29,8 +29,8 @@ class SerialClient():
     def receive_state(self):
         inp = ""
 
-        while inp != "":
-            inp = get_input()
+        while len(inp) < 1:
+            inp = self.get_input()
 
             if(inp == "6666"):
                 # corresponds to resend state
@@ -46,7 +46,7 @@ class SerialClient():
         if(self.ser is not None):
             self.LAST_STATE_SENT = msg
             self.ser.write(msg)
-            time.sleep(1)
+            time.sleep(.05)
 
     def get_input(self):
         output = ""
