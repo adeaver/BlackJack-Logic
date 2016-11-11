@@ -63,6 +63,8 @@ class SerialClient():
                     else:
                         if(time.time() - start_time >= self.READ_TIMEOUT):
                             break
+                except KeyboardInterrupt:
+                    raise
                 except:
                     if(error_count > 0):
                         start_time = time.time()

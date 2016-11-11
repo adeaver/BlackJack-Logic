@@ -26,6 +26,7 @@ class GameMachine():
             self.update_state()
             print self.current_state
 
+        self.serial.send_state("eeee") # end the game
         print "Game over!"
 
     def deal_cards(self):
