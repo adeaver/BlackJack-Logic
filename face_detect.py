@@ -54,6 +54,9 @@ class FaceDetection:
             cv2.imshow('frame',frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+            
+            if "9" in scan_state:
+                 break   
  
             self.cap.truncate(0)
         # When everything done, release the capture
@@ -63,13 +66,13 @@ class FaceDetection:
         return player_count
 
     def send_state(self, state, player_count):
-        #self.serial_client.send(state)
-        #return self.serial_client.receive_state()
-        if player_count == 5:
-            return "9999"
-        else:
-            return "7777"
+        self.serial_client.send_state(state)
+        return self.serial_client.receive_state()
+        #if player_count == 5:
+        #    return "9999"
+        #else:
+        #    return "7777"
 
-f = FaceDetection(None)
-n = f.scan_for_faces()
-print n
+#f = FaceDetection(None)
+#n = f.scan_for_faces()
+#print n
