@@ -26,6 +26,7 @@ class FaceDetection:
         time.sleep(0.1)     
 
         for capture in self.camera.capture_continuous(self.cap, format="bgr", use_video_port=True):
+            print "Capturing..."
             frame = capture.array
             should_send = True
             #ret, frame = self.cap.read()
@@ -49,6 +50,8 @@ class FaceDetection:
 
             if(should_send):
                 scan_state = self.send_state("7777", player_count)
+                print "Sent 7777"
+                print scan_state
 
              # Display the resulting frame
             #cv2.imshow('frame',frame)
