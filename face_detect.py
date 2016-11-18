@@ -6,16 +6,18 @@ import cv2, time
 class FaceDetection:
 
     def __init__(self, serial_client):
-        self.face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
+        self.face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
         self.camera = PiCamera()
         
-        self.camera.resolution = (640, 480)
-        self.camera.framerate = 32
+        self.camera.resolution = (320, 240)
+        self.camera.framerate = 30 
 
-        self.cap = PiRGBArray(self.camera, size=(640,480))
+        self.cap = PiRGBArray(self.camera, size=(320, 240))
 
-        #self.cap = cv2.VideoCapture(0)
         self.serial_client = serial_client
+
+        self.box_width = 10
+
 
     def scan_for_faces(self):
         scan_state = "0000"
@@ -31,13 +33,14 @@ class FaceDetection:
             height = frame.shape[0]
             width = frame.shape[1]
 
-            lower_bound = (width/2)-5
-            upper_bound = (width/2)+5
+            lower_bound = (width/2)-self.box_width
+            upper_bound = (width/2)+self.box_width
 
             faces = self.face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
             for (x,y,w,h) in faces:
                 if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
                     player_count += 1
+                    print "Detected new player"
                     scan_state = self.send_state("8888", player_count)
                     should_send = False
 
