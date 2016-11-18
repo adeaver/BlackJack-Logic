@@ -69,8 +69,9 @@ class FaceDetection:
         return player_count
 
     def send_state(self, state, player_count):
-        self.serial_client.send_state(state)
-        return self.serial_client.receive_state()
+        return self.serial_client.send_and_receive(state)
+        #self.serial_client.send_state(state)
+        #return self.serial_client.receive_state()
         #if player_count == 5:
         #    return "9999"
         #else:

@@ -5,7 +5,7 @@ class SerialClient():
     def __init__(self):
         self.PORT = self.find_arduino()
         self.ser = None
-        self.READ_TIMEOUT = 2
+        self.READ_TIMEOUT = 3 
         self.LAST_STATE_SENT = ""
 
         if(self.PORT != ""):
@@ -21,6 +21,20 @@ class SerialClient():
 
     def connected(self):
         return self.ser is not None
+
+    def send_and_receive(self, state):
+        r_state = ""
+
+        # clear the buffer
+        self.get_input()
+        
+        while r_state == "":
+            print "Sending state"
+            self.send_state(state)
+            r_state = self.get_input()
+
+        return r_state
+        
 
     def send_state(self, state):
         if(self.ser is not None):
@@ -45,6 +59,9 @@ class SerialClient():
     def write(self, msg):
         if(self.ser is not None):
             self.LAST_STATE_SENT = msg
+            time.sleep(1)
+            self.ser.setDTR(level=0)
+            time.sleep(1)
             self.ser.write(msg)
             time.sleep(.05)
 
