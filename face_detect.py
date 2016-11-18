@@ -1,20 +1,32 @@
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import numpy as np
-import cv2
+import cv2, time
 
 class FaceDetection:
 
     def __init__(self, serial_client):
         self.face_cascade = cv2.CascadeClassifier('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
-        self.cap = cv2.VideoCapture(0)
+        self.camera = PiCamera()
+        
+        self.camera.resolution = (640, 480)
+        self.camera.framerate = 32
+
+        self.cap = PiRGBArray(self.camera, size=(640,480))
+
+        #self.cap = cv2.VideoCapture(0)
         self.serial_client = serial_client
 
     def scan_for_faces(self):
         scan_state = "0000"
         player_count = 0
+        
+        time.sleep(0.1)     
 
-        while "9" not in scan_state:
+        for capture in self.camera.capture_continuous(self.cap, format="bgr", use_video_port=True):
+            frame = capture.array
             should_send = True
-            ret, frame = self.cap.read()
+            #ret, frame = self.cap.read()
 
             height = frame.shape[0]
             width = frame.shape[1]
@@ -38,9 +50,11 @@ class FaceDetection:
              # Display the resulting frame
             cv2.imshow('frame',frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                break 
+                break
+ 
+            self.cap.truncate(0)
         # When everything done, release the capture
-        self.cap.release()
+        #self.cap.release()
         cv2.destroyAllWindows()
 
         return player_count
