@@ -13,7 +13,6 @@ class SPIClient():
 
     def write_state(self, state):
         bytes = [state+48] * 12
-        #print bytes
         bytes.append(10)
         for b in bytes:
             self.SPI.writebytes([b])
@@ -22,33 +21,44 @@ class SPIClient():
         bytes = []
 
         start_time = time.time()
+        valid_state = False
+        next_state = -1
 
-        while len(bytes) < 12:
+        while not valid_state:
             byte = self.SPI.readbytes(1)
             if(byte[0] != 0 and byte[0] != 10):
                 bytes.append(byte[0])
-		print byte[0]
             else:
-                if(len(bytes) > 5):
-                    break
-            if(time.time() - start_time >= self.TIME_OUT):
-                bytes = []
-                self.write_state(6)
-                start_time = time.time()
+                valid_state, next_state = self.validate_state(bytes)
 
-        states = [0] * 9
+                if(not valid_state):
+                    bytes = []
+                    self.write_state(6)
+
+        return next_state
+
+
+    def validate_state(self, bytes):
+        states = [0] * 10
+        max_val = 0
+        max_states = []
+
+        if(len(bytes) != 12):
+            return False, -1
 
         for by in bytes:
-	    i = by-48
-	    if i >= 0 and i <= 8:
-            	states[i] += 1
+            i = by - 48
+            if i > 0 and i < 10:
+                states[i] += 1
 
-        max_state = 0
-        max_val = 0
         for i in range(len(states)):
-            if(states[i] > max_val):
-                 max_state = i
-                 max_val = states[i]
+            if states[i] > max_val:
+                max_val = states[i]
+                max_states = [states[i]]
+            elif states[i] == max_val:
+                max_states.append(states[i])
 
-	print max_state
-        return max_state
+        if len(max_states) > 1:
+            return False, -1
+
+        return True, max_states[0]
