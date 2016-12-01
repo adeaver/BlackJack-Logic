@@ -43,7 +43,7 @@ class SPIClient():
         max_state = 0
         max_val = 0
         for i in range(len(states)):
-            if(state[i] > max_val):
+            if(states[i] > max_val):
                  max_state = i
                  max_val = state[i]
 
