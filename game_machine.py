@@ -31,14 +31,15 @@ class GameMachine():
 
     def deal_cards(self):
         for i in range(0, self.game.get_deal_amount()):
-            self.send_command()
+            print "Dealing card"
+            self.current_output = self.send_command()
 
         self.n -= 1 # decrement the amount of players left to deal to
 
     def send_command(self):
         time.sleep(.2)
         self.spi.write_state(self.OUTPUT[self.current_state])
-        self.current_output = self.spi.read_state()
+        return self.spi.read_state()
         #self.current_output = self.OUTPUT[self.current_state]
 
     def update_state(self):
@@ -47,7 +48,7 @@ class GameMachine():
                 self.TRANSITIONS[1][1] = 2
 
         i = self.current_output-1
-	
+        print "i = " + str(i)	
         if i == -1:
             self.current_state = -1
         else:
