@@ -40,8 +40,8 @@ class SPIClient():
 
                         start_time = time.time()
                  elif(time.time() - start_time > self.TIME_OUT):
-                     self.write_state(6)
-                     start_time = time.time()
+                    self.write_state(6)
+                    start_time = time.time()
         #print next_state
         return next_state
 
