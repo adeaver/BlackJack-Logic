@@ -46,8 +46,8 @@ class GameMachine():
             if self.n == 0:
                 self.TRANSITIONS[1][1] = 2
 
-        i = self.current_output
-
+        i = self.current_output-1
+	
         if i == -1:
             self.current_state = -1
         else:
