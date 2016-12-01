@@ -49,9 +49,6 @@ class SPIClient():
         max_val = 0
         max_states = []
 
-        if(len(bytes) != 12):
-            return False, -1
-
         for by in bytes:
             i = by - 48
             if i > 0 and i < 10:
