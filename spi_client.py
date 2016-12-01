@@ -26,31 +26,19 @@ class SPIClient():
         valid_state = False
         next_state = -1
 
-        while not valid_state:
+        while len(bytes) < 12:
             byte = self.SPI.readbytes(1)
             if(byte[0] != 0 and byte[0] != 10):
                 bytes.append(byte[0])
-            else:
-                if(len(bytes) > 0):
-                    valid_state, next_state = self.validate_state(bytes)
-
-                    if(not valid_state):
-                        self.write_state(6)
-
-                        start_time = time.time()
-                elif(time.time() - start_time > self.TIME_OUT):
-                    self.write_state(6)
-                    start_time = time.time()
-        print "NEXT STATE: " + str(next_state)
-        return next_state
-
+	valid_state, next_state = self.validate_state(bytes)
+	return next_state
 
     def validate_state(self, bytes):
         states = [0] * 10
         max_val = 0
         max_states = []
 
-        if(len(bytes) < 5):
+        if(len(bytes) < 4):
             return False, -1
 
         for by in bytes:
@@ -63,10 +51,13 @@ class SPIClient():
             if states[i] > max_val:
                 max_val = states[i]
                 max_states = [i]
+                print i
             elif states[i] == max_val:
                 max_states.append(i)
 
         if len(max_states) > 1:
+            print "MAX STATES EXCEEDED LIMIT"
             return False, -1
 
+        print max_states[0]
         return True, max_states[0]

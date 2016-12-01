@@ -23,10 +23,10 @@ class GameMachine():
                 self.deal_cards()
             else:
                 # handle rotating, playing, and hitting
-                self.send_command()
+                self.current_output = self.send_command()
 
             self.update_state()
-            print self.current_state
+            print "CURRENT STATE: " + str(self.current_state)
 
         #self.spi.send_state("eeee") # end the game
         print "Game over!"
