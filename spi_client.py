@@ -39,7 +39,9 @@ class SPIClient():
         states = [0] * 9
 
         for by in bytes:
-            states[by-48] += 1
+	    i = by-48
+	    if i >= 0 and i <= 8:
+            	states[i] += 1
 
         max_state = 0
         max_val = 0
