@@ -29,11 +29,12 @@ class SPIClient():
             if(byte[0] != 0 and byte[0] != 10):
                 bytes.append(byte[0])
             else:
-                valid_state, next_state = self.validate_state(bytes)
+                if(len(bytes) > 0):
+                    valid_state, next_state = self.validate_state(bytes)
 
-                if(not valid_state):
-                    bytes = []
-                    self.write_state(6)
+                    if(not valid_state):
+                        bytes = []
+                        self.write_state(6)
 
         return next_state
 
