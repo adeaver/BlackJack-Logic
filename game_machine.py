@@ -15,6 +15,8 @@ class GameMachine():
         self.spi = spi_client
 
     def play_game(self):
+        self.spi.write_state(0)
+
         while self.current_state != -1:
             if self.current_state == 0:
                 # deal cards

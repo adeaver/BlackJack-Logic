@@ -21,7 +21,7 @@ class SPIClient():
         bytes = []
 
         print "Reading"
-
+  
         start_time = time.time()
         valid_state = False
         next_state = -1
@@ -35,14 +35,13 @@ class SPIClient():
                     valid_state, next_state = self.validate_state(bytes)
 
                     if(not valid_state):
-                        bytes = []
                         self.write_state(6)
 
                         start_time = time.time()
                 elif(time.time() - start_time > self.TIME_OUT):
                     self.write_state(6)
                     start_time = time.time()
-        #print next_state
+        print "NEXT STATE: " + str(next_state)
         return next_state
 
 
@@ -51,17 +50,21 @@ class SPIClient():
         max_val = 0
         max_states = []
 
+        if(len(bytes) < 5):
+            return False, -1
+
         for by in bytes:
             i = by - 48
+            print "by: " + str(i)
             if i > 0 and i < 10:
                 states[i] += 1
 
         for i in range(len(states)):
             if states[i] > max_val:
                 max_val = states[i]
-                max_states = [states[i]]
+                max_states = [i]
             elif states[i] == max_val:
-                max_states.append(states[i])
+                max_states.append(i)
 
         if len(max_states) > 1:
             return False, -1
