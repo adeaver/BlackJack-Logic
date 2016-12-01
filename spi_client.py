@@ -23,13 +23,16 @@ class SPIClient():
         start_time = time.time()
         valid_state = False
         next_state = -1
+        miss = 0
 
         while not valid_state:
             byte = self.SPI.readbytes(1)
             if(byte[0] != 0 and byte[0] != 10):
                 bytes.append(byte[0])
             else:
-                if(len(bytes) > 0 or time.time() - start_time > self.TIME_OUT):
+                miss += 1
+                if(miss > 5 and len(bytes) > 0 or time.time() - start_time > self.TIME_OUT):
+                    miss = 0
                     valid_state, next_state = self.validate_state(bytes)
 
                     if(not valid_state):
