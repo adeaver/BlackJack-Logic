@@ -1,5 +1,6 @@
 from spi_client import SPIClient
 from game_control import Game
+import time
 
 class GameMachine():
 
@@ -35,8 +36,9 @@ class GameMachine():
         self.n -= 1 # decrement the amount of players left to deal to
 
     def send_command(self):
+        time.sleep(.2)
         self.spi.write_state(self.OUTPUT[self.current_state])
-        self.current_output = self.serial.read_state()
+        self.current_output = self.spi.read_state()
         #self.current_output = self.OUTPUT[self.current_state]
 
     def update_state(self):
@@ -44,7 +46,7 @@ class GameMachine():
             if self.n == 0:
                 self.TRANSITIONS[1][1] = 2
 
-        i = self.get_index_for_output()
+        i = self.current_output
 
         if i == -1:
             self.current_state = -1

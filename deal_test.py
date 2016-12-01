@@ -1,7 +1,7 @@
 from game_control import *
 from game_machine import *
-from serial_client import *
+from spi_client import *
 
-client = SerialClient()
+client = SPIClient()
 machine = GameMachine(game, client)
 machine.play_game()

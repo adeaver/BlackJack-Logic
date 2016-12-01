@@ -25,46 +25,49 @@ class FaceDetection:
         
         time.sleep(0.1)     
 
-        for capture in self.camera.capture_continuous(self.cap, format="bgr", use_video_port=True):
-            print "Capturing..."
-            frame = capture.array
-            should_send = True
-            #ret, frame = self.cap.read()
+        #for capture in self.camera.capture_continuous(self.cap, format="bgr", use_video_port=True):
+        #    print "Capturing..."
+        #    frame = capture.array
+        #    should_send = True
+        #    #ret, frame = self.cap.read()
 
-            height = frame.shape[0]
-            width = frame.shape[1]
+        #    height = frame.shape[0]
+        #    width = frame.shape[1]
 
-            lower_bound = (width/2)-self.box_width
-            upper_bound = (width/2)+self.box_width
+        #    lower_bound = (width/2)-self.box_width
+        #    upper_bound = (width/2)+self.box_width
 
-            faces = self.face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
-            for (x,y,w,h) in faces:
-                if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
-                    player_count += 1
-                    print "Detected new player"
-                    scan_state = self.send_state("8888", player_count)
-                    should_send = False
+         #   faces = self.face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
+         #   for (x,y,w,h) in faces:
+          #      if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
+          #          player_count += 1
+          #          print "Detected new player"
+          #          scan_state = self.send_state("8888", player_count)
+          #          should_send = False
 
-                cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
-            cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
+          #      cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
+          #  cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
 
-            if(should_send):
-                scan_state = self.send_state("7777", player_count)
-                print "Sent 7777"
-                print scan_state
+           # if(should_send):
+           #     scan_state = self.send_state("7777", player_count)
+           #     print "Sent 7777"
+           #     print scan_state
 
              # Display the resulting frame
             #cv2.imshow('frame',frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+           # if cv2.waitKey(1) & 0xFF == ord('q'):
+           #     break
             
-            if "9" in scan_state:
-                 break   
+           # if "9" in scan_state:
+           #      break   
  
-            self.cap.truncate(0)
+           # self.cap.truncate(0)
         # When everything done, release the capture
         #self.cap.release()
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
+
+	while "9" not in scan_state:
+	     scan_state = self.send_state("7777", player_count)
 
         return player_count
 
