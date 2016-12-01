@@ -1,18 +1,17 @@
-from serial_client import SerialClient
+from spi_client import SPIClient
 from game_control import Game
 
 class GameMachine():
 
-    def __init__(self, game, serial_client):
+    def __init__(self, game, spi_client):
         #self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 3, 1, -1], [-1, -1, -1, -1, 1]]
         self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, 1]] # for testing, this should just deal
         self.current_state = 0
-        self.current_input = "1111"
-        self.OUTPUT = ["1111", "2222", "3333", "5555"]
+        self.OUTPUT = [1, 2, 3, 5]
         self.INPUT = ["1", "2", "3", "4", "5"]
         self.n = game.get_num_players()
         self.game = game
-        self.serial = serial_client
+        self.spi = spi_client
 
     def play_game(self):
         while self.current_state != -1:
@@ -26,7 +25,7 @@ class GameMachine():
             self.update_state()
             print self.current_state
 
-        self.serial.send_state("eeee") # end the game
+        #self.spi.send_state("eeee") # end the game
         print "Game over!"
 
     def deal_cards(self):
@@ -36,8 +35,8 @@ class GameMachine():
         self.n -= 1 # decrement the amount of players left to deal to
 
     def send_command(self):
-        self.serial.send_state(self.OUTPUT[self.current_state])
-        self.current_output = self.serial.receive_state()
+        self.spi.write_state(self.OUTPUT[self.current_state])
+        self.current_output = self.serial.read_state()
         #self.current_output = self.OUTPUT[self.current_state]
 
     def update_state(self):
