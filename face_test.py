@@ -1,7 +1,7 @@
 from face_detect import *
-from serial_client import *
+from spi_client import *
 
-client = SerialClient()
+client = SPIClient()
 face = FaceDetection(client)
 
 n = face.scan_for_faces()

@@ -5,7 +5,7 @@ import cv2, time
 
 class FaceDetection:
 
-    def __init__(self, serial_client):
+    def __init__(self, spi_client):
         self.face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
         self.camera = PiCamera()
         
@@ -14,13 +14,13 @@ class FaceDetection:
 
         self.cap = PiRGBArray(self.camera, size=(320, 240))
 
-        self.serial_client = serial_client
+        self.spi = spi_client
 
         self.box_width = 10
 
 
     def scan_for_faces(self):
-        scan_state = "0000"
+        scan_state = 0
         player_count = 0
         
         time.sleep(0.1)     
@@ -66,19 +66,14 @@ class FaceDetection:
         #self.cap.release()
         #cv2.destroyAllWindows()
 
-	while "9" not in scan_state:
-	     scan_state = self.send_state("7777", player_count)
+	while scan_state != 9:
+	     scan_state = self.send_state(7, player_count)
 
         return player_count
 
     def send_state(self, state, player_count):
-        #return self.serial_client.send_and_receive(state)
-        self.serial_client.send_state(state)
-        return self.serial_client.receive_state()
-        #if player_count == 5:
-        #    return "9999"
-        #else:
-        #    return "7777"
+        self.spi.write_state(state)
+        return self.spi.read_state()
 
 #f = FaceDetection(None)
 #n = f.scan_for_faces()
