@@ -6,7 +6,7 @@ class GameMachine():
 
     def __init__(self, game, spi_client):
         #self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 3, 1, -1], [-1, -1, -1, -1, 1]]
-        self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, -1, -1, -1], [-1, -1, -1, -1, 1]] # for testing, this should just deal
+        self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 4, -1, -1], [-1, -1, -1, -1, 1], [-1, -1, -1, -1, -1]] # for testing, this should just deal
         self.current_state = 0
         self.OUTPUT = [1, 2, 3, 5]
         self.INPUT = ["1", "2", "3", "4", "5"]
@@ -17,16 +17,19 @@ class GameMachine():
     def play_game(self):
         self.spi.write_state(0)
 
-        while self.current_state != -1:
-            if self.current_state == 0:
-                # deal cards
-                self.deal_cards()
-            else:
-                # handle rotating, playing, and hitting
-                self.current_output = self.send_command()
+        while self.current_state != 4:
+            if self.current_output != -1:
+                if self.current_state == 0:
+                    # deal cards
+                    self.deal_cards()
+                else:
+                    # handle rotating, playing, and hitting
+                    self.current_output = self.send_command()
 
-            self.update_state()
-            print "CURRENT STATE: " + str(self.current_state)
+                self.update_state()
+                print "CURRENT STATE: " + str(self.current_state)
+            else:
+                self.current_output = self.spi.read_state()
 
         #self.spi.send_state("eeee") # end the game
         print "Game over!"
