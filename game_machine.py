@@ -13,6 +13,7 @@ class GameMachine():
         self.n = game.get_num_players()
         self.game = game
         self.spi = spi_client
+        self.current_output = 0
 
     def play_game(self):
         self.spi.write_state(0)
