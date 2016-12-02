@@ -5,12 +5,14 @@ import time
 class GameMachine():
 
     def __init__(self, game, spi_client):
-        #self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 3, 1, -1], [-1, -1, -1, -1, 1]]
-        self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 4, -1, -1], [-1, -1, -1, -1, 1], [-1, -1, -1, -1, -1]] # for testing, this should just deal
-        self.current_state = 0
+        self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 3, 1, -1], [-1, -1, -1, -1, 1], [-1, -1, -1, -1, -1]]
+        #self.TRANSITIONS = [[1, -1, -1, -1, -1], [-1, 0, -1, -1, -1], [-1, -1, 4, -1, -1], [-1, -1, -1, -1, 1], [-1, -1, -1, -1, -1]] # for testing, this should just deal
+        self.current_state = 2
         self.OUTPUT = [1, 2, 3, 5]
         self.INPUT = ["1", "2", "3", "4", "5"]
         self.n = game.get_num_players()
+        self.round = game.get_num_players()
+        self.dealt = 0
         self.game = game
         self.spi = spi_client
         self.current_output = 0
@@ -59,6 +61,12 @@ class GameMachine():
             self.current_state = -1
         else:
             self.current_state = self.TRANSITIONS[self.current_state][i]
+
+        if(self.current_state == 2):
+            self.dealt += 1
+
+            if(self.dealt == self.round):
+                self.current_state == 4
 
     def get_index_for_output(self):
         for i in range(len(self.INPUT)):
