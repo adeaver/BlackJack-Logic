@@ -29,7 +29,7 @@ cap = PiRGBArray(camera, size=(320, 240))
 box_width = 10
 
 for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True):
-    count states += 1
+    count_states += 1
     print "Capturing..."
     frame = capture.array
     should_send = True
