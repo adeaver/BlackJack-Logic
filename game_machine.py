@@ -18,7 +18,7 @@ class GameMachine():
         self.current_output = 0
 
     def play_game(self):
-        self.spi.write_state(0)
+        #self.spi.write_state(0)
 
         while self.current_state != 4:
             if self.current_output != -1:
