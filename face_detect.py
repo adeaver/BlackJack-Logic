@@ -1,80 +1,63 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
-import cv2, time
+import cv2, spidev, time
 
-class FaceDetection:
+def send_and_receive(spi, state):
+    spi.writebytes([state])
 
-    def __init__(self, spi_client):
-        self.face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
-        self.camera = PiCamera()
-        
-        self.camera.resolution = (320, 240)
-        self.camera.framerate = 30 
+    while len(bytes) < 1:
+        b = spi.readbytes(1)
+        if(b[0] != 0):
+            return b[0]
 
-        self.cap = PiRGBArray(self.camera, size=(320, 240))
+    return -1
 
-        self.spi = spi_client
+spi = spidev.SpiDev()
+spi.open(0, 0)
+state = 0
 
-        self.box_width = 10
+face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
+camera = PiCamera()
 
+camera.resolution = (320, 240)
+camera.framerate = 30 
 
-    def scan_for_faces(self):
-        scan_state = 0
-        player_count = 0
-        
-        time.sleep(0.1)     
+cap = PiRGBArray(camera, size=(320, 240))
 
-        #for capture in self.camera.capture_continuous(self.cap, format="bgr", use_video_port=True):
-        #    print "Capturing..."
-        #    frame = capture.array
-        #    should_send = True
-        #    #ret, frame = self.cap.read()
+box_width = 10
 
-        #    height = frame.shape[0]
-        #    width = frame.shape[1]
+while state != 9:
+    for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True):
+       print "Capturing..."
+       frame = capture.array
+       should_send = True
+       #ret, frame = cap.read()
 
-        #    lower_bound = (width/2)-self.box_width
-        #    upper_bound = (width/2)+self.box_width
+       height = frame.shape[0]
+       width = frame.shape[1]
 
-         #   faces = self.face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
-         #   for (x,y,w,h) in faces:
-          #      if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
-          #          player_count += 1
-          #          print "Detected new player"
-          #          scan_state = self.send_state("8888", player_count)
-          #          should_send = False
+       lower_bound = (width/2)-box_width
+       upper_bound = (width/2)+box_width
 
-          #      cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
-          #  cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
+       faces = face_cascade.detectMultiScale(frame, scaleFactor=1.2, minSize=(20,20))
+       for (x,y,w,h) in faces:
+           if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
+               print "Detected new player"
+               scan_state = send_and_receive(spi, 8)
+               should_send = False
 
-           # if(should_send):
-           #     scan_state = self.send_state("7777", player_count)
-           #     print "Sent 7777"
-           #     print scan_state
+           cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
+       cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
 
-             # Display the resulting frame
-            #cv2.imshow('frame',frame)
-           # if cv2.waitKey(1) & 0xFF == ord('q'):
-           #     break
-            
-           # if "9" in scan_state:
-           #      break   
- 
-           # self.cap.truncate(0)
-        # When everything done, release the capture
-        #self.cap.release()
-        #cv2.destroyAllWindows()
+       if(should_send):
+           scan_state = send_and_receive(spi, 7)
 
-	while scan_state != 9:
-	     scan_state = self.send_state(7, player_count)
+         Display the resulting frame
+        cv2.imshow('frame',frame)
+       if cv2.waitKey(1) & 0xFF == ord('q'):
+           break
 
-        return player_count
+       cap.truncate(0)
 
-    def send_state(self, state, player_count):
-        self.spi.write_state(state)
-        return self.spi.read_state()
-
-#f = FaceDetection(None)
-#n = f.scan_for_faces()
-#print n
+print "Done!"
