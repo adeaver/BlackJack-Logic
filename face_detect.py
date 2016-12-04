@@ -21,12 +21,12 @@ count_states = 0
 face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
 camera = PiCamera()
 
-camera.resolution = (320, 240)
+camera.resolution = (640, 480)
 camera.framerate = 30 
 
-cap = PiRGBArray(camera, size=(320, 240))
+cap = PiRGBArray(camera, size=(640, 480))
 
-box_width = 10
+box_width = 30
 
 for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True):
     count_states += 1
