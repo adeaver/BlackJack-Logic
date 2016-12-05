@@ -9,6 +9,7 @@ def send_and_receive(spi, state):
     while True:
         b = spi.readbytes(1)
         if(b[0] != 0):
+            print "RECEIVED " + str(b[0])
             return b[0]
 
     return -1
