@@ -3,7 +3,7 @@ from picamera import PiCamera
 import numpy as np
 import cv2, spidev, time
 
-def send_and_receive():
+def send_and_receive(state):
     spi = spidev.SpiDev()
     spi.open(0, 0)
     spi.max_speed_hz = 7629
