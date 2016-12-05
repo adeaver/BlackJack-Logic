@@ -8,7 +8,7 @@ def send_and_receive(state):
     spi.open(0, 0)
     spi.max_speed_hz = 7629
     
-    spi.writebytes([state, state, state])
+    spi.xfer2([state, state, state])
 
     time.sleep(.1)
 
