@@ -4,7 +4,7 @@ import numpy as np
 import cv2, spidev, time
 
 def send_and_receive(spi, state):
-    spi.writebytes([state])
+    spi.writebytes([state, state, state])
 
     time.sleep(.1)
 
@@ -18,6 +18,7 @@ def send_and_receive(spi, state):
 
 spi = spidev.SpiDev()
 spi.open(0, 0)
+spi.max_speed_hz = 7629
 state = 0
 count_states = 0
 
