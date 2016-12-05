@@ -6,6 +6,8 @@ import cv2, spidev, time
 def send_and_receive(spi, state):
     spi.writebytes([state])
 
+    time.sleep(.1)
+
     while True:
         b = spi.readbytes(1)
         if(b[0] != 0):
