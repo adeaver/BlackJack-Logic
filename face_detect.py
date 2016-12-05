@@ -3,7 +3,11 @@ from picamera import PiCamera
 import numpy as np
 import cv2, spidev, time
 
-def send_and_receive(spi, state):
+def send_and_receive():
+    spi = spidev.SpiDev()
+    spi.open(0, 0)
+    spi.max_speed_hz = 7629
+    
     spi.writebytes([state, state, state])
 
     time.sleep(.1)
@@ -12,13 +16,12 @@ def send_and_receive(spi, state):
         b = spi.readbytes(1)
         if(b[0] != 0):
             print "RECEIVED " + str(b[0])
+            spi.close()
             return b[0]
 
+    spi.close()
     return -1
 
-spi = spidev.SpiDev()
-spi.open(0, 0)
-spi.max_speed_hz = 7629
 state = 0
 count_states = 0
 
@@ -49,14 +52,14 @@ for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True)
     for (x,y,w,h) in faces:
       if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
           print "Detected new player"
-          scan_state = send_and_receive(spi, 8)
+          scan_state = send_and_receive(8)
           should_send = False
 
       cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
     cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
 
     if(should_send):
-      scan_state = send_and_receive(spi, 9)
+      scan_state = send_and_receive(9)
 
     #Display the resulting frame
     #cv2.imshow('frame',frame)
