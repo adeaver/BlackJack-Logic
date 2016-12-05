@@ -53,7 +53,7 @@ for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True)
     cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
 
     if(should_send):
-      scan_state = send_and_receive(spi, 7)
+      scan_state = send_and_receive(spi, 9)
 
     #Display the resulting frame
     #cv2.imshow('frame',frame)
