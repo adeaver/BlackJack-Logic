@@ -17,7 +17,7 @@ def send_and_receive(spi, state):
     return -1
 
 spi = spidev.SpiDev()
-spi.open(0, 1)
+spi.open(0, 0)
 state = 0
 count_states = 0
 
