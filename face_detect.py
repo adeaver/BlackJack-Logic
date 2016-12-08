@@ -15,6 +15,8 @@ def send_and_receive(ser, state):
     ser.write(state)
     inState = -1
 
+    start_time = time.time()
+
     time.sleep(.01)
 
     while inState == -1:
@@ -22,8 +24,15 @@ def send_and_receive(ser, state):
             if(ord(c) != 13 and ord(c) != 10):
                 try:
                     inState = int(c)
+                    break
                 except ValueError:
                     continue
+
+            if(time.time() - start_time >= 2):
+                ser.write(state)
+                time.sleep(.01)
+                start_time = time.time()
+
 
     return inState
 
