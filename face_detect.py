@@ -92,7 +92,7 @@ try:
 
         cap.truncate(0)
 
-        if scan_state == 9 or count_states >= 40:
+        if scan_state == 9:
             break
 except KeyboardInterrupt:
     ser.close()
