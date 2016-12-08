@@ -77,5 +77,9 @@ try:
 
         if scan_state == 9 or count_states >= 40:
             break
+except KeyboardInterrupt:
+    ser.close()
+
+ser.close()
 
 print "Done!"
