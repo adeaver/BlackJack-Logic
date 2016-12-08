@@ -34,7 +34,7 @@ def send_and_receive(ser, state):
                 time.sleep(.01)
                 start_time = time.time()
 
-    ser.reset_input_buffer()
+    ser.flushInput()
     return inState
 
 port = find_arduino()
