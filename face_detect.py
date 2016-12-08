@@ -28,12 +28,13 @@ def send_and_receive(ser, state):
                 except ValueError:
                     continue
 
-            if(time.time() - start_time >= 2):
+            if(time.time() - start_time >= 1):
+                print "Resending state"
                 ser.write(state)
                 time.sleep(.01)
                 start_time = time.time()
 
-
+    ser.reset_input_buffer()
     return inState
 
 port = find_arduino()
