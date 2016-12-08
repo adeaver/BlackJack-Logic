@@ -13,14 +13,19 @@ def find_arduino():
 
 def send_and_receive(ser, state):
     ser.write(state)
+    inState = -1
 
     time.sleep(.01)
-    for c in ser.read():
-        if(ord(c) != 13 and ord(c) != 10):
-            try:
-                return int(c)
-            except ValueError:
-                continue;
+
+    while inState == -1:
+        for c in ser.read():
+            if(ord(c) != 13 and ord(c) != 10):
+                try:
+                    inState = int(c)
+                except ValueError:
+                    continue
+
+    return inState
 
 port = find_arduino()
 print port
