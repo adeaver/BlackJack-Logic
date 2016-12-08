@@ -16,8 +16,11 @@ def send_and_receive(ser, state):
 
     time.sleep(.01)
     for c in ser.read():
-            if(ord(c) != 13 and ord(c) != 10):
+        if(ord(c) != 13 and ord(c) != 10):
+            try:
                 return int(c)
+            except ValueError:
+                continue;
 
 port = find_arduino()
 print port
