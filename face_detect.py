@@ -84,14 +84,16 @@ while True:
                 for (x,y,w,h) in faces:
                   if(x+w/2 >= lower_bound and x+w/2 <= upper_bound):
                       print "Detected new player"
-                      scan_state = send_and_receive(ser, "8")
                       should_send = False
+                      break
 
                   cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255))
                 cv2.rectangle(frame, (lower_bound, 0), (upper_bound, height), (0, 255, 0))
 
                 if(should_send):
                   scan_state = send_and_receive(ser, "7")
+                else:
+                  scan_state = send_and_receive(ser, "8")
 
                 #Display the resulting frame
                 #cv2.imshow('frame',frame)
