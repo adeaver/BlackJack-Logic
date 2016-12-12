@@ -50,21 +50,21 @@ ser = serial.Serial(port=port, baudrate=9600, timeout=.01)
 ser.setRTS(True)
 ser.setRTS(False)
 
+face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
+camera = PiCamera()
+
+camera.resolution = (640, 480)
+camera.framerate = 30 
+
+cap = PiRGBArray(camera, size=(640, 480))
+
+box_width = 30
+
 while True:
     started = not (GPIO.input(17))
     while started:
         state = 0
         count_states = 0
-
-        face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
-        camera = PiCamera()
-
-        camera.resolution = (640, 480)
-        camera.framerate = 30 
-
-        cap = PiRGBArray(camera, size=(640, 480))
-
-        box_width = 30
 
         try:
             for capture in camera.capture_continuous(cap, format="bgr", use_video_port=True):
