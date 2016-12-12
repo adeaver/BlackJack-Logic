@@ -51,7 +51,7 @@ ser.setRTS(True)
 ser.setRTS(False)
 
 while True:
-    started = GPIO.input(17)
+    started = not (GPIO.input(17))
     while started:
         state = 0
         count_states = 0
