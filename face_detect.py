@@ -60,8 +60,11 @@ cap = PiRGBArray(camera, size=(640, 480))
 
 box_width = 30
 
+break_all = False
+
 while True:
-    started = not (GPIO.input(17))
+    #started = (GPIO.input(17))
+    started = True
     while started:
         state = 0
         count_states = 0
@@ -103,12 +106,15 @@ while True:
                 cap.truncate(0)
 
                 if scan_state == 9:
+                    break_all = True
                     break
         except KeyboardInterrupt:
             ser.close()
         except:
             break
     started = False
+    if break_all:
+         break
 
 ser.close()
 
