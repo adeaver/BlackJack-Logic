@@ -62,7 +62,7 @@ box_width = 30
 
 break_all = False
 
-while True:
+while not break_all:
     #started = (GPIO.input(17))
     started = True
     while started:
