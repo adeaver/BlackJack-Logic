@@ -114,7 +114,7 @@ while True:
             break
     started = False
     if break_all:
-         break
+        break
 
 ser.close()
 
